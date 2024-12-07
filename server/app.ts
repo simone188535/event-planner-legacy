@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from "cors";
 import helmet from 'helmet';
+import AppError from '@utils/appError';
 
 const app = express();
 
@@ -16,11 +17,19 @@ app.use(helmet());
 // routes here
 
 
-app.use((req, res, next) => {
-    console.log("Hello, route is present!");
+// app.use((req, res, next) => {
+//     console.log("Hello, route is present!");
 
-    next();
-});
+//     next();
+// });
 
 
+
+app.all('*', (req, res, next) => {
+    next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+  });
+
+
+  // app.use(globalErrorHandler);
+  
 export default app;

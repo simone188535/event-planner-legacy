@@ -1,5 +1,6 @@
 // import dotenv from "dotenv";
-import app from './app';
+import 'module-alias/register';
+import app from '@root/app';
 
 
 // dotenv.config({ path: './config.env' });
