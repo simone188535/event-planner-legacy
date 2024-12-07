@@ -2,6 +2,7 @@ import express from 'express';
 import cors from "cors";
 import helmet from 'helmet';
 import AppError from '@utils/appError';
+import globalErrorHandler from '@controllers/errorController';
 
 const app = express();
 
@@ -30,6 +31,6 @@ app.all('*', (req, res, next) => {
   });
 
 
-  // app.use(globalErrorHandler);
+  app.use(globalErrorHandler);
   
 export default app;
