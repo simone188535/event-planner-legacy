@@ -1,9 +1,9 @@
-// import dotenv from "dotenv";
+import dotenv from "dotenv";
 import 'module-alias/register';
 import app from '@root/app';
 
 
-// dotenv.config({ path: './config.env' });
+dotenv.config({ path: './config.env' });
 
 // connect DB HERE
 
