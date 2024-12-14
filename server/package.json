@@ -31,6 +31,7 @@
   },
   "_moduleAliases": {
     "@root": "",
+    "@db": "db",
     "@utils": "utils",
     "@controllers": "controllers",
     "@routes": "routes"
