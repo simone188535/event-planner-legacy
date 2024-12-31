@@ -1,9 +1,7 @@
-import dotenv from "dotenv";
+import './loadEnv';
 import "module-alias/register";
 import { pool } from "@db/index";
 import app from "@root/app";
-
-dotenv.config({ path: "./config.env" });
 
 // connect DB
 (async () => {
