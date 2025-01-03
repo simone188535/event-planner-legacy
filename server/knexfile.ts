@@ -1,3 +1,5 @@
+import 'module-alias/register';
+import './loadEnv';
 import type { Knex } from "knex";
 
 const configSettings = {
@@ -5,13 +7,15 @@ const configSettings = {
   connection: {
     database:  process.env.DBNAME,
     user:  process.env.USER,
-    password:  process.env.PASSWORD
+    password:  process.env.PASSWORD,
+    host: '127.0.0.1',
+    port: 5432,
   },
   migrations: {
-    directory: "../migrations",
+    directory: "./migrations",
   },
   seeds: {
-    directory: '../seeds',
+    directory: './seeds',
   },
 };
 
