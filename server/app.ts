@@ -2,6 +2,8 @@ import express from 'express';
 import cors from "cors";
 import helmet from 'helmet';
 import AppError from '@utils/appError';
+import {authRouter} from '@routes/authRoutes';
+// import authController from '@controllers/authController';
 import globalErrorHandler from '@controllers/errorController';
 
 const app = express();
@@ -16,6 +18,7 @@ app.use(helmet());
 
 
 // routes here
+app.use('/api/v1/users', authRouter);
 
 
 // app.use((req, res, next) => {
