@@ -1,4 +1,5 @@
 import express from 'express';
+import morgan from 'morgan';
 import cors from "cors";
 import helmet from 'helmet';
 import AppError from '@utils/appError';
@@ -7,6 +8,9 @@ import {authRouter} from '@routes/authRoutes';
 import globalErrorHandler from '@controllers/errorController';
 
 const app = express();
+
+// 1. Middleware
+app.use(morgan('dev'));
 
 app.use(express.json());
 
@@ -17,7 +21,7 @@ app.use(cors());
 app.use(helmet());
 
 
-// routes here
+// 2. routes
 app.use('/api/v1/users', authRouter);
 
 
