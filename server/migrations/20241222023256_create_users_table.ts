@@ -2,7 +2,7 @@ import type { Knex } from "knex";
 import catchMigration from "@utils/catchMigration";
 // import AppError from "@utils/appError";
 
-exports.up = catchMigration(async (knex: Knex): Promise<void> => {
+export const up = catchMigration(async (knex: Knex): Promise<void> => {
   await knex.raw(`
             CREATE TABLE users (
             id SERIAL PRIMARY KEY,
@@ -16,6 +16,6 @@ exports.up = catchMigration(async (knex: Knex): Promise<void> => {
             `);
 });
 
-exports.down = catchMigration(async (knex: Knex): Promise<void> => {
+export const down = catchMigration(async (knex: Knex): Promise<void> => {
   await knex.raw(`DROP TABLE users`);
 });
