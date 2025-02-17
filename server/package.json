@@ -4,11 +4,11 @@
   "description": "This is the server for the Event Planner Legacy App. It utilizes node, express, typescript and PGSQL",
   "main": "app.ts",
   "scripts": {
-    "start": "nodemon server.ts",
+    "start": "tsx server.ts",
     "client": "cd ../client && npm start",
     "dev": "concurrently \"npm run start\" \"npm run client\"",
     "create-db": "psql -U postgres < ./db/schema.sql",
-    "start:prod": "NODE_ENV=production nodemon server.js",
+    "start:prod": "NODE_ENV=production tsx server.js",
     "all-migrations": "knex migrate:latest"
   },
   "dependencies": {
