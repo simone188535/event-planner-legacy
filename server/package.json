@@ -45,7 +45,8 @@
     "@controllers": "controllers",
     "@routes": "routes",
     "@validators": "validators",
-    "@models": "models"
+    "@models": "models",
+    "@dtos": "dtos"
   },
   "author": "",
   "license": "ISC"
