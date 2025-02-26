@@ -11,7 +11,7 @@ const signup = catchAsync(
 
       // if passwords do not match
       if (password !== passwordConfirm) {
-        return new AppError(`password and confirm password need to match!`, 406);
+        return next(new AppError(`password and confirm password need to match!`, 406));
       }
 
     // destructure object (to expose the rows object) and get first element of the array in the same step
