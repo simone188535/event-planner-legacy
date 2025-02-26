@@ -1,17 +1,7 @@
+import { UserModel } from "@models/userModel";
 // interfaces
 
-export interface UserModel {
-    id: number;
-    firstName: string;
-    lastName: string;
-    username: string;
-    email: string;
-    password: string;
-    passwordConfirm: string;
-    dateCreated: Date;
-}
+// export interface signupDto extends Omit<UserModel, "id" | "dateCreated">;
 
-
-export interface createUserDto {
-    
-}
+// types
+export type signupDto = Omit<UserModel, "id" | "dateCreated">;
