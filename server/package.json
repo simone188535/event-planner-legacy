@@ -43,7 +43,8 @@
     "@db": "db",
     "@utils": "utils",
     "@controllers": "controllers",
-    "@routes": "routes"
+    "@routes": "routes",
+    "@validators": "validators"
   },
   "author": "",
   "license": "ISC"
