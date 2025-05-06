@@ -9,8 +9,9 @@ const allReqBodyObject = (obj) => Object.entries(obj).map(([key, val]) => ({
 }));
 
 
-const anyEmptyObjectVals = allReqBodyObject.find(
+// 
+const findEmptyObjVals = allReqBodyObject.find(
   ({ key, value }) => value === "" || value === null
 );
 
-return anyEmptyObject;
+return findEmptyObjVals;

@@ -4,6 +4,7 @@ import { query } from "@db/index";
 import { Request, Response, NextFunction } from "express";
 import AppError from '@utils/appError';
 
+
 const signup = catchAsync(
   async (req: Request<{}, {}, signupDto, {}>, res: Response, next: NextFunction) => {
     const { firstName, lastName, username, email, password, passwordConfirm } =
@@ -12,6 +13,11 @@ const signup = catchAsync(
       // if passwords do not match
       if (password !== passwordConfirm) {
         return next(new AppError(`password and confirm password need to match!`, 406));
+
+        console.log('hi');
+        return res.status(201).json({
+          status: "success",
+        });
       }
 
     // destructure object (to expose the rows object) and get first element of the array in the same step
