@@ -4,4 +4,5 @@ import { UserModel } from "@models/userModel";
 // export interface signupDto extends Omit<UserModel, "id" | "dateCreated">;
 
 // types
-export type signupDto = Omit<UserModel, "id" | "dateCreated">;
+export type signupReqBodyDto = Omit<UserModel, "id" | "dateCreated">;
+export type signupResBodyDto = UserModel;
