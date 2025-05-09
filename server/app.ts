@@ -31,8 +31,6 @@ app.use('/api/v1/users', authRouter);
 //     next();
 // });
 
-
-console.log('!!!!!!!!!!!!!!!!!!', process.env.NODE_ENV);
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
   });
