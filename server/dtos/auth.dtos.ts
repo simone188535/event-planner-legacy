@@ -3,6 +3,11 @@ import { UserModel } from "@models/userModel";
 
 // export interface signupDto extends Omit<UserModel, "id" | "dateCreated">;
 
+export interface signupResBodyDto {
+     user: UserModel;
+     status: string;
+};
+
 // types
 export type signupReqBodyDto = Omit<UserModel, "id" | "dateCreated">;
-export type signupResBodyDto = UserModel;
+
