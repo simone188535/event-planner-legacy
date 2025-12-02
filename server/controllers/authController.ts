@@ -6,7 +6,7 @@ import AppError from '@utils/appError';
 
 
 const signup = catchAsync(
-  async (req: Request<{}, signupResBodyDto, signupReqBodyDto, {}>, res: Response, next: NextFunction) => {
+  async (req: Request<{}, {}, signupReqBodyDto, {}>, res: Response<signupResBodyDto, {}>, next: NextFunction) => {
     const { firstName, lastName, username, email, password, passwordConfirm } =
       req.body;
 
