@@ -1,6 +1,9 @@
-import { body, ValidationChain } from "express-validator";
+import { body } from "express-validator";
+import { checkValidators } from "@middlewares/validators";
+import { ValidatorWithCheck } from "@validators/types";
 
-const signupValidator = () => [
+
+const signupValidator = (): ValidatorWithCheck => [
   body("firstName").notEmpty().withMessage("First name is required!"),
   body("lastName").notEmpty().withMessage("Last name is required!"),
   body("username").notEmpty().withMessage("Username is required!"),
@@ -23,9 +26,10 @@ const signupValidator = () => [
       }
       return true;
     }),
+  checkValidators
 ];
 
-const loginValidator = () => [
+const loginValidator = (): ValidatorWithCheck => [
   body("email")
     .notEmpty()
     .withMessage("Email is required!")
@@ -36,6 +40,7 @@ const loginValidator = () => [
     .withMessage("password is required!")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters!"),
+  checkValidators
 ];
 
 export { signupValidator, loginValidator };
