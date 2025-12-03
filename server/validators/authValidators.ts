@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, ValidationChain } from "express-validator";
 
 const signupValidator = () => [
   body("firstName").notEmpty().withMessage("First name is required!"),
@@ -31,7 +31,6 @@ const loginValidator = () => [
     .withMessage("Email is required!")
     .isEmail()
     .withMessage("Email is invalid!"),
-  ,
   body("password")
     .notEmpty()
     .withMessage("password is required!")
