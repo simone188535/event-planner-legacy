@@ -1,6 +1,7 @@
 import { UserModel } from "@models/userModel";
-// interfaces
 
+// sign up
+// interfaces
 // export interface signupDto extends Omit<UserModel, "id" | "dateCreated">;
 
 export interface signupResBodyDto {
@@ -11,3 +12,5 @@ export interface signupResBodyDto {
 // types
 export type signupReqBodyDto = Omit<UserModel, "id" | "dateCreated">;
 
+// login
+export type loginReqBodyDto = Pick<UserModel, "email" | "password">;
