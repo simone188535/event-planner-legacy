@@ -1,5 +1,5 @@
 import catchAsync from "@utils/catchAsync";
-import { signupResBodyDto, signupReqBodyDto } from "dtos/auth.dtos";
+import { signupResBodyDto, signupReqBodyDto, loginReqBodyDto } from "dtos/auth.dtos";
 import { query } from "@db/index";
 import { Request, Response, NextFunction } from "express";
 import AppError from '@utils/appError';
@@ -31,4 +31,10 @@ const signup = catchAsync(
   }
 );
 
-export { signup };
+const login = catchAsync(
+  async (req: Request<{}, {}, loginReqBodyDto>, res: Response, next: NextFunction) => {
+    
+  }
+);
+
+export { signup, login };
