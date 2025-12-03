@@ -21,16 +21,6 @@ const checkValidators =
     // if there are any errors...
     if (!errors.isEmpty()) {
         console.log(errors.array());
-        // next(new AppError('f', 406));
-        // next(res.send(errors.array()));
-    //   next(new AppError(JSON.stringify(errors.array()), 406));
-    // res.status(406).json({
-    //     status: 'error',
-    //     token,
-    //     data: {
-    //       user
-    //     }
-    //   });
 
     res.status(406).json({err: errors.array()});
     }
