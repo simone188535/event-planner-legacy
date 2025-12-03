@@ -25,6 +25,18 @@ const signupValidator = () => [
     }),
 ];
 
-const loginValidator = () => [body("email"), body("password")];
+const loginValidator = () => [
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required!")
+    .isEmail()
+    .withMessage("Email is invalid!"),
+  ,
+  body("password")
+    .notEmpty()
+    .withMessage("password is required!")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters!"),
+];
 
 export { signupValidator, loginValidator };
