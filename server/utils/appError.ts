@@ -21,12 +21,18 @@
 
 
 class AppError extends Error {
-  constructor(message, statusCode, cause = {}) {
+    statusCode: number;
+    status: string;
+    cause: any[];
+    isOperational: boolean;
+
+  constructor(message: string, statusCode: number, cause:any[] = []) {
     super(message);
 
     this.statusCode = statusCode;
     this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
     this.isOperational = true;
+    this.cause = cause;
 
     Error.captureStackTrace(this, this.constructor);
   }
