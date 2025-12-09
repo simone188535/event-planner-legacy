@@ -2,18 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { validationResult, ValidationChain } from "express-validator";
 import AppError from "@utils/appError";
 
-// const checkValidators =
-//   (validators: ValidationChain[], onlyFirstError = false) =>
-//   (req: Request, res: Response, next: NextFunction) => {
-//     const errors = validationResult(req);
-//     console.log('helo validations', errors.isEmpty());
-//     // if there are any errors...
-//     if (!errors.isEmpty()) {
-//       next(new AppError(errors.array({ onlyFirstError: onlyFirstError }), 406));
-//     }
-
-//     return next();
-//   };
 const checkValidators =
   (req: Request, res: Response, next: NextFunction) => {
     const results = validationResult(req);
@@ -33,10 +21,9 @@ const checkValidators =
        next(new AppError(errors[0].msg, 404));
     } // if there is more than one error message
     else if (errors.length > 1) {
+       // if there are multiple, pass multiple errors the AppError array
        next(new AppError("Multiple validation errors occurred.", 404, errors));
     }
-
-    // if there are multiple, pass multiple errors the AppError cause
 
     return next();
   };
