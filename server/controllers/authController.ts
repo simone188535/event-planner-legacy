@@ -1,27 +1,31 @@
+import { Request, Response, NextFunction } from "express";
+import * as bcrypt from 'bcrypt';
 import catchAsync from "@utils/catchAsync";
 import { signupResBodyDto, signupReqBodyDto, loginReqBodyDto } from "dtos/auth.dtos";
 import { query } from "@db/index";
-import { Request, Response, NextFunction } from "express";
 import AppError from '@utils/appError';
 
 
 const signup = catchAsync(
   async (req: Request<{}, {}, signupReqBodyDto, {}>, res: Response<signupResBodyDto, {}>, next: NextFunction) => {
-    const { firstName, lastName, username, email, password, passwordConfirm } =
+    const { firstName, lastName, username, email, password } =
       req.body;
 
       // if passwords do not match
-      if (password !== passwordConfirm) {
-        return next(new AppError(`password and confirm password need to match!`, 406));
-      }
+      // if (password !== passwordConfirm) {
+      //   return next(new AppError(`password and confirm password need to match!`, 406));
+      // }
+
+    // encrypt password before adding to database
+    const encryptedPassword = await bcrypt.hash(password, 12);
 
     // destructure object (to expose the rows object) and get first element of the array in the same step
     const { rows: [newUser] } = await query(
       `
-    INSERT INTO users(first_name, last_name, username, email, password, password_confirm) 
-    VALUES($1, $2, $3, $4, $5, $6)
+    INSERT INTO users(first_name, last_name, username, email, password) 
+    VALUES($1, $2, $3, $4, $5)
     RETURNING *`,
-      [firstName, lastName, username, email, password, passwordConfirm]
+      [firstName, lastName, username, email, encryptedPassword]
     );
 
     return res.status(201).json({
@@ -33,7 +37,9 @@ const signup = catchAsync(
 
 const login = catchAsync(
   async (req: Request<{}, {}, loginReqBodyDto>, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
     
+    // check if user exists and password is correct
   }
 );
 
