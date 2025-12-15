@@ -5,6 +5,5 @@ export interface UserModel {
     username: string;
     email: string;
     password: string;
-    passwordConfirm: string;
     dateCreated: Date;
 }
