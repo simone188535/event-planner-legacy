@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import catchAsync from "@utils/catchAsync";
-import { signupResBodyDto, signupReqBodyDto, loginReqBodyDto } from "dtos/auth.dtos";
+import { signupResBodyDto, signupReqBodyDto, loginReqBodyDto, loginResBodyDto } from "dtos/auth.dtos";
 import { query } from "@db/index";
 import AppError from '@utils/appError';
 
@@ -51,7 +51,7 @@ const signup = catchAsync(
 );
 
 const login = catchAsync(
-  async (req: Request<{}, {}, loginReqBodyDto>, res: Response, next: NextFunction) => {
+  async (req: Request<{}, {}, loginReqBodyDto>, res: Response<loginResBodyDto, {}>, next: NextFunction) => {
     const { email, password } = req.body;
     
     // check if user exists 
