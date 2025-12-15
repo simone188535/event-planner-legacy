@@ -37,9 +37,7 @@ const loginValidator = (): ValidatorWithCheck => [
     .withMessage("Email is invalid!"),
   body("password")
     .notEmpty()
-    .withMessage("password is required!")
-    .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 characters!"),
+    .withMessage("password is required!"),
   checkValidators
 ];
 
