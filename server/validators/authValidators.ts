@@ -41,4 +41,6 @@ const loginValidator = (): ValidatorWithCheck => [
   checkValidators
 ];
 
-export { signupValidator, loginValidator };
+const protectValidator = (): ValidatorWithCheck => [];
+
+export { signupValidator, loginValidator, protectValidator };
