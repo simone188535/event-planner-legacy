@@ -3,7 +3,8 @@ import morgan from 'morgan';
 import cors from "cors";
 import helmet from 'helmet';
 import AppError from '@utils/appError';
-import {authRouter} from '@routes/authRoutes';
+import { authRouter } from '@routes/authRoutes';
+import { eventsRouter } from "@routes/eventsRoutes";
 // import authController from '@controllers/authController';
 import globalErrorHandler from '@controllers/errorController';
 
@@ -23,6 +24,7 @@ app.use(helmet());
 
 // 2. routes
 app.use('/api/v1/users', authRouter);
+app.use('/api/v1/events', eventsRouter);
 
 
 // app.use((req, res, next) => {
