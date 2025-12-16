@@ -88,4 +88,17 @@ const login = catchAsync(
   }
 );
 
-export { signup, login };
+const protect = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // Check if token is present
+
+    // verification token
+
+    // check if user still exists
+
+    // check if user changed password after the token was issued
+
+    next();
+  });
+
+export { signup, login, protect };
