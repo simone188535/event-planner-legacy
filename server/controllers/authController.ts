@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import catchAsync from "@utils/catchAsync";
-import { signupResBodyDto, signupReqBodyDto, loginReqBodyDto, loginResBodyDto } from "dtos/auth.dtos";
+import { signupResBodyDto, signupReqBodyDto, loginReqBodyDto, loginResBodyDto, protectReqHeaderDTORequest } from "dtos/auth.dtos";
 import { query } from "@db/index";
 import AppError from '@utils/appError';
 
@@ -89,7 +89,7 @@ const login = catchAsync(
 );
 
 const protect = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: protectReqHeaderDTORequest, res: Response, next: NextFunction) => {
     // Check if token is present
     let token = req.headers.authorization.split(" ")[1];
 
