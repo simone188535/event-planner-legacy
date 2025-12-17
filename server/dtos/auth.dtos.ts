@@ -1,4 +1,6 @@
 import { UserModel } from "@models/userModel";
+import { IncomingHttpHeaders } from 'http';
+import { Request } from 'express';
 
 // sign up
 export type signupReqBodyDto = Omit<UserModel, "id" | "dateCreated">;
@@ -17,3 +19,10 @@ export interface loginResBodyDto {
      user: Omit<UserModel, "password">;
      token: string;
 };
+
+// protect
+export interface protectReqHeaderDTO extends Request {
+  headers: IncomingHttpHeaders & {
+    authorization: string;
+  }
+}

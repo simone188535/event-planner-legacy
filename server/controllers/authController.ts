@@ -91,6 +91,11 @@ const login = catchAsync(
 const protect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if token is present
+    let token = req.headers.authorization.split(" ")[1];
+
+    if (!token) {
+      return next(new AppError(`You are not logged in! Please log in to get access!`, 406));
+    }
 
     // verification token
 
