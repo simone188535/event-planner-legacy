@@ -40,7 +40,7 @@ const loginValidator = (): ValidatorWithCheck => [
   checkValidators,
 ];
 
-const protectValidator = (req: Request, res: Response, next: NextFunction): ValidatorWithCheck => [
+const protectValidator = (): ValidatorWithCheck => [
   header("authorization")
     .exists({values: 'falsy'})
     .withMessage("Authorization Header required!")
