@@ -1,7 +1,8 @@
-import { body } from "express-validator";
+import { Request, Response, NextFunction } from "express";
+import { body, header } from "express-validator";
 import { checkValidators } from "@middlewares/validators";
 import { ValidatorWithCheck } from "@validators/types";
-
+import AppError from "@utils/appError";
 
 const signupValidator = (): ValidatorWithCheck => [
   body("firstName").notEmpty().withMessage("First name is required!"),
@@ -26,7 +27,7 @@ const signupValidator = (): ValidatorWithCheck => [
       }
       return true;
     }),
-  checkValidators
+  checkValidators,
 ];
 
 const loginValidator = (): ValidatorWithCheck => [
@@ -35,12 +36,27 @@ const loginValidator = (): ValidatorWithCheck => [
     .withMessage("Email is required!")
     .isEmail()
     .withMessage("Email is invalid!"),
-  body("password")
-    .notEmpty()
-    .withMessage("password is required!"),
-  checkValidators
+  body("password").notEmpty().withMessage("password is required!"),
+  checkValidators,
 ];
 
-const protectValidator = (): ValidatorWithCheck => [];
+const protectValidator = (req: Request, res: Response, next: NextFunction): ValidatorWithCheck => [
+  header("authorization")
+    .exists({values: 'falsy'})
+    .withMessage("Authorization Header required!")
+    .bail() // not necessary, but it stops execution if previous validation failed
+    .contains("Bearer")
+    .withMessage("Authorization Token is not Bearer"),
+    // .bail()
+    // .custom((value, { req }) => {
+    //   // You can add more complex checks here, like JWT verification
+    //   const token = value.split(' ')[1];
+    //   if (!token) {
+    //     return next(new AppError(`You are not logged in! Please log in to get access.`, 406));
+    //   }
+    //   return true;
+    // }),
+    checkValidators,
+];
 
 export { signupValidator, loginValidator, protectValidator };
