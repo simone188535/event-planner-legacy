@@ -21,7 +21,7 @@ export interface loginResBodyDto {
 };
 
 // protect
-export interface protectReqHeaderDTO extends Request {
+export interface protectReqHeaderDTORequest extends Request {
   headers: IncomingHttpHeaders & {
     authorization: string;
   }
