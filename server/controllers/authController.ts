@@ -1,8 +1,9 @@
+import { promisify } from "util";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import catchAsync from "@utils/catchAsync";
-import { signupResBodyDto, signupReqBodyDto, loginReqBodyDto, loginResBodyDto, protectReqHeaderDTORequest } from "dtos/auth.dtos";
+import { signupResBodyDTO, signupReqBodyDTO, loginReqBodyDTO, loginResBodyDTO, protectReqHeaderDTORequest } from "dtos/auth.dtos";
 import { query } from "@db/index";
 import AppError from '@utils/appError';
 
@@ -15,7 +16,7 @@ const createToken = (id: number) => jwt.sign({ id }, process.env.JWT_SECRET!, {
 });
 
 const signup = catchAsync(
-  async (req: Request<{}, {}, signupReqBodyDto, {}>, res: Response<signupResBodyDto, {}>, next: NextFunction) => {
+  async (req: Request<{}, {}, signupReqBodyDTO, {}>, res: Response<signupResBodyDTO, {}>, next: NextFunction) => {
     const { firstName, lastName, username, email, password } =
       req.body;
 
@@ -51,7 +52,7 @@ const signup = catchAsync(
 );
 
 const login = catchAsync(
-  async (req: Request<{}, {}, loginReqBodyDto>, res: Response<loginResBodyDto, {}>, next: NextFunction) => {
+  async (req: Request<{}, {}, loginReqBodyDTO>, res: Response<loginResBodyDTO, {}>, next: NextFunction) => {
     const { email, password } = req.body;
     
     // check if user exists 
@@ -98,6 +99,8 @@ const protect = catchAsync(
     }
 
     // verification token
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET!);
+      console.log(decodedToken);
 
     // check if user still exists
 

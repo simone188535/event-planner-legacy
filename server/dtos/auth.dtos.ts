@@ -3,18 +3,18 @@ import { IncomingHttpHeaders } from 'http';
 import { Request } from 'express';
 
 // sign up
-export type signupReqBodyDto = Omit<UserModel, "id" | "dateCreated">;
+export type signupReqBodyDTO = Omit<UserModel, "id" | "dateCreated">;
 
-export interface signupResBodyDto {
+export interface signupResBodyDTO {
      status: string;
      user: UserModel;
      token: string;
 };
 
 // login
-export type loginReqBodyDto = Pick<UserModel, "email" | "password">;
+export type loginReqBodyDTO = Pick<UserModel, "email" | "password">;
 
-export interface loginResBodyDto {
+export interface loginResBodyDTO {
      status: string;
      user: Omit<UserModel, "password">;
      token: string;

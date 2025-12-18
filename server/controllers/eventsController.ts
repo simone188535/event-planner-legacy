@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 // import jwt from "jsonwebtoken";
 // import bcrypt from "bcryptjs";
 import catchAsync from "@utils/catchAsync";
-// import { signupResBodyDto, signupReqBodyDto, loginReqBodyDto, loginResBodyDto } from "dtos/auth.dtos";
+// import { signupResBodyDTO, signupReqBodyDTO, loginReqBodyDTO, loginResBodyDTO } from "dtos/auth.dtos";
 // import { query } from "@db/index";
 // import AppError from '@utils/appError';
 
