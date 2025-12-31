@@ -1,6 +1,6 @@
 import { promisify } from "util";
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import catchAsync from "@utils/catchAsync";
 import { signupResBodyDTO, signupReqBodyDTO, loginReqBodyDTO, loginResBodyDTO, protectReqHeaderDTORequest } from "dtos/auth.dtos";
@@ -14,6 +14,17 @@ const bcryptPasswordCompare = async (attemptedPassword: string, currentPassword:
 const createToken = (id: number) => jwt.sign({ id }, process.env.JWT_SECRET!, {
     expiresIn: '7d'
 });
+
+const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, secret, (err, decoded) => {
+      if (err || !decoded) {
+        return reject(err);
+      }
+      resolve(decoded as JwtPayload);
+    });
+  });
+};
 
 const signup = catchAsync(
   async (req: Request<{}, {}, signupReqBodyDTO, {}>, res: Response<signupResBodyDTO, {}>, next: NextFunction) => {
@@ -99,7 +110,7 @@ const protect = catchAsync(
     }
 
     // verification token
-      const decodedToken = jwt.verify(token, process.env.JWT_SECRET!);
+      const decodedToken = await verifyToken(token, process.env.JWT_SECRET!);
       console.log(decodedToken);
 
     // check if user still exists
