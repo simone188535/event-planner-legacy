@@ -114,6 +114,16 @@ const protect = catchAsync(
       console.log(decodedToken);
 
     // check if user still exists
+    const { rows: [existingUser] } = await query(
+      `SELECT * FROM users WHERE id = ($1)`,
+      [decodedToken.id]
+    );
+    console.log("existingUser", existingUser);
+
+    if (!existingUser) {
+       return next(new AppError(`This user does not exist!`, 400));
+    }
+
 
     // check if user changed password after the token was issued
 
