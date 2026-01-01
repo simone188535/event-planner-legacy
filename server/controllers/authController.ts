@@ -113,12 +113,12 @@ const protect = catchAsync(
       const decodedToken = await verifyToken(token, process.env.JWT_SECRET!);
 
     // check if user still exists
-    const { rows: [existingUser] } = await query(
+    const { rows: [currentUser] } = await query(
       `SELECT * FROM users WHERE id = ($1)`,
       [decodedToken.id]
     );
 
-    if (!existingUser) {
+    if (!currentUser) {
        return next(new AppError(`This user does not exist!`, 400));
     }
 
@@ -129,7 +129,7 @@ const protect = catchAsync(
        return next(new AppError(`Invalid Token! Iat does not exist!`, 406));
     }
 
-    if (existingUser.last_modified > new Date(iatTimestamp * 1000).toISOString()) {
+    if (currentUser.last_modified > new Date(iatTimestamp * 1000).toISOString()) {
        return next(new AppError(`Password was changed! Please login!`, 406));
     }
 
