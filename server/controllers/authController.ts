@@ -1,19 +1,29 @@
-import { promisify } from "util";
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import catchAsync from "@utils/catchAsync";
-import { signupResBodyDTO, signupReqBodyDTO, loginReqBodyDTO, loginResBodyDTO, protectReqHeaderDTORequest } from "dtos/auth.dtos";
+import {
+  signupResBodyDTO,
+  signupReqBodyDTO,
+  loginReqBodyDTO,
+  loginResBodyDTO,
+  protectReqHeaderDTORequest,
+} from "@dtos/auth.dtos";
 import { query } from "@db/index";
-import AppError from '@utils/appError';
+import AppError from "@utils/appError";
 
-const bcryptPasswordCompare = async (attemptedPassword: string, currentPassword: string) => {
+const bcryptPasswordCompare = async (
+  attemptedPassword: string,
+  currentPassword: string
+) => {
   return await bcrypt.compare(attemptedPassword, currentPassword);
-}
+};
 
-const createToken = (id: number) => jwt.sign({ id }, process.env.JWT_SECRET!, {
-    expiresIn: '7d'
-});
+const createToken = (id: number) =>
+  jwt.sign({ id }, process.env.JWT_SECRET!, {
+    expiresIn: "7d",
+  });
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
   return new Promise((resolve, reject) => {
@@ -27,20 +37,20 @@ const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
 };
 
 const signup = catchAsync(
-  async (req: Request<{}, {}, signupReqBodyDTO, {}>, res: Response<signupResBodyDTO, {}>, next: NextFunction) => {
-    const { firstName, lastName, username, email, password } =
-      req.body;
-
-      // if passwords do not match
-      // if (password !== passwordConfirm) {
-      //   return next(new AppError(`password and confirm password need to match!`, 406));
-      // }
+  async (
+    req: Request<{}, {}, signupReqBodyDTO, {}>,
+    res: Response<signupResBodyDTO, {}>,
+    next: NextFunction
+  ) => {
+    const { firstName, lastName, username, email, password } = req.body;
 
     // encrypt password before adding to database
     const encryptedPassword = await bcrypt.hash(password, 12);
 
     // destructure object (to expose the rows object) and get first element of the array in the same step
-    const { rows: [newUser] } = await query(
+    const {
+      rows: [newUser],
+    } = await query(
       `
     INSERT INTO users(first_name, last_name, username, email, password) 
     VALUES($1, $2, $3, $4, $5)
@@ -48,29 +58,28 @@ const signup = catchAsync(
       [firstName, lastName, username, email, encryptedPassword]
     );
 
-    // generate the jwt token that allows to access protected routes
-    // const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET!, {
-    //   expiresIn: '7d'
-    // });
     const token = createToken(newUser.id);
 
     return res.status(201).json({
       status: "success",
       user: newUser,
-      token
+      token,
     });
   }
 );
 
 const login = catchAsync(
-  async (req: Request<{}, {}, loginReqBodyDTO>, res: Response<loginResBodyDTO, {}>, next: NextFunction) => {
+  async (
+    req: Request<{}, {}, loginReqBodyDTO>,
+    res: Response<loginResBodyDTO, {}>,
+    next: NextFunction
+  ) => {
     const { email, password } = req.body;
-    
-    // check if user exists 
-    const { rows: [existingUser] } = await query(
-      `SELECT * FROM users WHERE email = ($1)`,
-      [email]
-    );
+
+    // check if user exists
+    const {
+      rows: [existingUser],
+    } = await query(`SELECT * FROM users WHERE email = ($1)`, [email]);
 
     // if user is not found...
     if (!existingUser) {
@@ -78,7 +87,10 @@ const login = catchAsync(
     }
 
     // check to see if password is correct
-    const isPasswordCorrect = await bcryptPasswordCompare(password, existingUser.password);
+    const isPasswordCorrect = await bcryptPasswordCompare(
+      password,
+      existingUser.password
+    );
 
     // if password is incorrect...
     if (!isPasswordCorrect) {
@@ -86,61 +98,114 @@ const login = catchAsync(
     }
 
     // if a user is found and password is valid, create a token
-     const token = createToken(existingUser.id);
-
+    const token = createToken(existingUser.id);
 
     // remove password from existingUser for security
     existingUser.password = undefined;
 
-     return res.status(200).json({
+    return res.status(200).json({
       status: "success",
       user: existingUser,
-      token
+      token,
     });
   }
 );
 
 const protect = catchAsync(
-  async (req: protectReqHeaderDTORequest, res: Response, next: NextFunction) => {
+  async (
+    req: protectReqHeaderDTORequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     // Check if token is present
     let token = req.headers.authorization.split(" ")[1];
 
     if (!token) {
-      return next(new AppError(`You are not logged in! Please log in to get access!`, 406));
+      return next(
+        new AppError(`You are not logged in! Please log in to get access!`, 406)
+      );
     }
 
     // verification token
-      const decodedToken = await verifyToken(token, process.env.JWT_SECRET!);
+    const decodedToken = await verifyToken(token, process.env.JWT_SECRET!);
 
     // check if user still exists
-    const { rows: [currentUser] } = await query(
-      `SELECT * FROM users WHERE id = ($1)`,
-      [decodedToken.id]
-    );
+    const {
+      rows: [currentUser],
+    } = await query(`SELECT * FROM users WHERE id = ($1)`, [decodedToken.id]);
 
     if (!currentUser) {
-       return next(new AppError(`This user does not exist!`, 400));
+      return next(new AppError(`This user does not exist!`, 404));
     }
 
     // check if user changed password after the token was issued
-    const {iat: iatTimestamp, exp: expTimestamp }  = decodedToken;
-    
+    const { iat: iatTimestamp, exp: expTimestamp } = decodedToken;
+
     if (!iatTimestamp) {
-       return next(new AppError(`Invalid Token! Iat does not exist!`, 406));
-    } 
+      return next(new AppError(`Invalid Token! Iat does not exist!`, 406));
+    }
 
     if (!expTimestamp) {
-       return next(new AppError(`Invalid Token! exp does not exist!`, 406));
-    } 
+      return next(new AppError(`Invalid Token! exp does not exist!`, 406));
+    }
 
-
-    if (currentUser.last_modified > new Date(iatTimestamp * 1000).toISOString()) {
-       return next(new AppError(`Password was changed! Please login!`, 406));
+    if (
+      currentUser.last_modified > new Date(iatTimestamp * 1000).toISOString()
+    ) {
+      return next(new AppError(`Password was changed! Please login!`, 406));
     }
 
     // grant access to protected route
     req.user = currentUser;
     next();
-  });
+  }
+);
 
-export { signup, login, protect };
+const forgotPassword = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // get user using email
+    const { email } = req.body;
+
+    const {
+      rows: [existingUser],
+    } = await query(`SELECT * FROM users WHERE email = ($1)`, [email]);
+
+    if (!existingUser) {
+      return next(new AppError(`This user does not exist!`, 404));
+    }
+
+  
+
+    // generate random reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    // send it to users email
+    const passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+   const {
+      rows: [updatedUser],
+    } =  await query(
+      `
+      INSERT INTO users(password_reset_token, password_reset_expires) 
+      VALUES($1, $2)
+      RETURNING *
+    `,
+      [hashedToken, passwordResetExpires]
+    );
+
+
+    return res.status(201).json({
+      status: "success",
+      user: updatedUser,
+    });
+  }
+);
+
+// const resetPassword = catchAsync(
+// async (req: Request, res: Response, next: NextFunction) => {
+
+// });
+
+export { signup, login, protect, forgotPassword };
