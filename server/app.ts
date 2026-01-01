@@ -4,6 +4,7 @@ import cors from "cors";
 import helmet from 'helmet';
 import AppError from '@utils/appError';
 import { authRouter } from '@routes/authRoutes';
+import { userRouter } from "@routes/usersRoutes";
 import { eventsRouter } from "@routes/eventsRoutes";
 // import authController from '@controllers/authController';
 import globalErrorHandler from '@controllers/errorController';
@@ -23,7 +24,8 @@ app.use(helmet());
 
 
 // 2. routes
-app.use('/api/v1/users', authRouter);
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/users', userRouter);
 app.use('/api/v1/events', eventsRouter);
 
 
