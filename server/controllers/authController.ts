@@ -174,27 +174,30 @@ const forgotPassword = catchAsync(
       return next(new AppError(`This user does not exist!`, 404));
     }
 
-  
-
     // generate random reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetToken = crypto.randomBytes(32).toString("hex");
 
-    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
 
     // send it to users email
-    const passwordResetExpires = Date.now() + 10 * 60 * 1000;
+    const passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
 
-   const {
+    const currentDate = new Date();
+
+    const {
       rows: [updatedUser],
-    } =  await query(
+    } = await query(
       `
-      INSERT INTO users(password_reset_token, password_reset_expires) 
-      VALUES($1, $2)
+      UPDATE users
+      SET password_reset_token = ($1), password_reset_expires = ($2), last_modified = ($3)
+      WHERE email = ($4)
       RETURNING *
     `,
-      [hashedToken, passwordResetExpires]
+      [hashedToken, passwordResetExpires, currentDate, email]
     );
-
 
     return res.status(201).json({
       status: "success",
