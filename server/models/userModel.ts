@@ -5,6 +5,6 @@ export interface UserModel {
     username: string;
     email: string;
     password: string;
-    lastModifed: Date;
+    lastModified: Date;
     dateCreated: Date;
 }
