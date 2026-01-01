@@ -138,6 +138,8 @@ const protect = catchAsync(
        return next(new AppError(`Password was changed! Please login!`, 406));
     }
 
+    // grant access to protected route
+    req.user = currentUser;
     next();
   });
 
