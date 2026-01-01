@@ -123,11 +123,16 @@ const protect = catchAsync(
     }
 
     // check if user changed password after the token was issued
-    const iatTimestamp = decodedToken.iat;
+    const {iat: iatTimestamp, exp: expTimestamp }  = decodedToken;
     
     if (!iatTimestamp) {
        return next(new AppError(`Invalid Token! Iat does not exist!`, 406));
-    }
+    } 
+
+    if (!expTimestamp) {
+       return next(new AppError(`Invalid Token! exp does not exist!`, 406));
+    } 
+
 
     if (currentUser.last_modified > new Date(iatTimestamp * 1000).toISOString()) {
        return next(new AppError(`Password was changed! Please login!`, 406));
