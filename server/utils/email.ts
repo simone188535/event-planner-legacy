@@ -13,11 +13,11 @@ const sendEmail = async (options: SendMailOptions) => {
             pass: process.env.EMAIL_PASSWORD
         },
 
-    }as SMTPTransportOptions);
+    } as SMTPTransportOptions);
 
     // Define the email options
     const mailOptions = {
-        from: 'Simone Anthony <simone.anthony1@gmail.com>',
+        from: 'Simone Anthony <example@gmail.com>',
         to: options.to,
         subject: options.subject,
         text: options.text,
