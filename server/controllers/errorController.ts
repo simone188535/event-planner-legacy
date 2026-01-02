@@ -1,19 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import AppError from '@utils/appError';
 
-const handleCastErrorDB = (err: any): AppError => {
+
+const handleCastErrorDB = (err: AppError): AppError => {
   const message = `Invalid ${err.path}: ${err.value}.`;
   return new AppError(message, 400);
 };
 
-const handleDuplicateFieldsDB = (err: any): AppError => {
+const handleDuplicateFieldsDB = (err: AppError): AppError => {
   const value = err.message.match(/(["'])(\\?.)*?\1/)?.[0] || '';
   const message = `Duplicate field value: ${value}. Please use another value!`;
   return new AppError(message, 400);
 };
 
-const handleValidationErrorDB = (err: any): AppError => {
-  const errors = Object.values(err.errors).map((el: any) => el.message);
+const handleValidationErrorDB = (err: AppError): AppError => {
+  const errors = Object.values(err.errors ?? {}).map((el: any) => el.message);
   const message = `Invalid input data. ${errors.join('. ')}`;
   return new AppError(message, 400);
 };
@@ -24,7 +25,7 @@ const handleJWTError = (): AppError =>
 const handleJWTExpiredError = (): AppError =>
   new AppError('Your token has expired! Please log in again.', 401);
 
-const sendErrorDev = (err: any, req: Request, res: Response): Response | void => {
+const sendErrorDev = (err: AppError, req: Request, res: Response): Response | void => {
   if (req.originalUrl.startsWith('/api')) {
     return res.status(err.statusCode).json({
       status: err.status,
@@ -41,7 +42,7 @@ const sendErrorDev = (err: any, req: Request, res: Response): Response | void =>
   });
 };
 
-const sendErrorProd = (err: any, req: Request, res: Response): Response | void => {
+const sendErrorProd = (err: AppError, req: Request, res: Response): Response | void => {
   if (req.originalUrl.startsWith('/api')) {
     if (err.isOperational) {
       return res.status(err.statusCode).json({
@@ -72,7 +73,7 @@ const sendErrorProd = (err: any, req: Request, res: Response): Response | void =
 };
 
 const globalErrorHandler = (
-  err: any,
+  err: AppError,
   req: Request,
   res: Response,
   next: NextFunction
