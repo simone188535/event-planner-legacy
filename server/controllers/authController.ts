@@ -12,6 +12,7 @@ import {
 } from "@dtos/auth.dtos";
 import { query } from "@db/index";
 import AppError from "@utils/appError";
+import { sendEmail } from "@utils/email";
 
 const bcryptPasswordCompare = async (
   attemptedPassword: string,
@@ -199,16 +200,31 @@ const forgotPassword = catchAsync(
       [hashedToken, passwordResetExpires, currentDate, email]
     );
 
-    return res.status(201).json({
+    const resetURL = `${req.protocol}://${req.get(
+      "host"
+    )}/api/v1/users/reset-password/${hashedToken}`;
+
+    const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to ${resetURL}. \nIf you didn't forget your password, please ignore this email!`;
+
+    try {
+    await sendEmail({
+      to: updatedUser.email, 
+      subject: 'Your password reset token (valid for 10 minutes)',
+      text: message
+    })
+
+    return res.status(200).json({
       status: "success",
-      user: updatedUser,
+      message: "Token sent to email!"
     });
+    } catch (err) {
+      return next(new AppError(`Forgot password email could not be sent. Please Try Again!`, 500));
+    };
   }
 );
 
-// const resetPassword = catchAsync(
-// async (req: Request, res: Response, next: NextFunction) => {
+const resetPassword = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {}
+);
 
-// });
-
-export { signup, login, protect, forgotPassword };
+export { signup, login, protect, forgotPassword, resetPassword };
