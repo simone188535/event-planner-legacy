@@ -224,7 +224,13 @@ const forgotPassword = catchAsync(
 );
 
 const resetPassword = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {}
+  async (req: Request, res: Response, next: NextFunction) => {
+    // get user based on token
+    const hashedToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
+    // if token has not expired, and there is user, set new password
+    // update last_modified property
+    // login the user in, send JWT
+  }
 );
 
 export { signup, login, protect, forgotPassword, resetPassword };
