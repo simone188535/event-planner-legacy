@@ -1,25 +1,20 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Container } from "@mui/material";
 
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Events from "./pages/Events";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Events />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/signup",
-    element: <Signup />,
-  },
-]);
+import Routes from "./providers/Routes";
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      {/* Header here */}
+      <Container
+        sx={{ bgcolor: "customColors.whiteLilac", minHeight: '100vh' }}
+        maxWidth={false}
+        disableGutters
+        component="main"
+      >
+        <Routes />
+      </Container>
+      {/* Footer here */}
+    </>
+  );
 }
-
