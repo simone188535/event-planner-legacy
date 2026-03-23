@@ -1,16 +1,10 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FC, type PropsWithChildren } from "react";
 import { AuthContext } from "../../context/Auth";
-import type { FC } from "react";
 
-const AuthProvider: FC = ({ children }) => {
+const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   // State to hold the authentication token
   const [token, setToken] = useState(localStorage.getItem("token") || null);
-
-  // Function to set the authentication token
-  // const assignSetToken = (newToken: string) => {
-  //   setToken(newToken);
-  // };
 
   const contextValue = { token, setToken };
 
