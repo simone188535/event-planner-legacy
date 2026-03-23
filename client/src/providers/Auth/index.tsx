@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthContext } from "../../context/Auth";
 import type { FC } from "react";
 
@@ -8,18 +8,11 @@ const AuthProvider: FC = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
 
   // Function to set the authentication token
-  const assignSetToken = (newToken: string) => {
-    setToken(newToken);
-  };
+  // const assignSetToken = (newToken: string) => {
+  //   setToken(newToken);
+  // };
 
-  // Memoized value of the authentication context
-  const contextValue = useMemo(
-    () => ({
-      token,
-      assignSetToken,
-    }),
-    [token]
-  );
+  const contextValue = { token, setToken };
 
   useEffect(() => {
     if (token) {
