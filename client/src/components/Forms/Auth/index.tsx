@@ -36,7 +36,7 @@ interface IAuthForm {
 
 const AuthForm: FC<IAuthForm> = ({
   header,
-  inputFields = [{label: "label1", name: 'label1', rest: {}}],
+  inputFields,
   footer
 }) => {
 const { primaryTxt, secondaryTxt } = header;
