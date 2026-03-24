@@ -1,7 +1,13 @@
-import type { FC } from 'react';
+import type { FC } from "react";
+import { Box } from "@mui/material";
+import LoginForm from "../../components/Forms/Login";
 
 const Login: FC = () => {
-  return <h1>Login Page</h1>;
+  return (
+    <Box component="form">
+      <LoginForm />
+    </Box>
+  );
 };
 
-export default Login
+export default Login;
